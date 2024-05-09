@@ -1,0 +1,42 @@
+﻿@page "/showdata"
+@rendermode InteractiveServer
+<h3>ShowData</h3>
+
+<table class ="table">
+    @foreach (var item in listStudents)
+    {
+      <tr>
+           <td> @item.StuId</td>
+            <td>@item.FirstName</td>
+            <td>@item.EmailAddress</td>
+            <td>
+                <button type="button" class="btn  btn-outline-danger btn-sm" @onclick="()=>DeleteData(item.StuId)">Delete</button>
+                
+                <a href="counter/@item.StuId" class="btn  btn-outline-warning btn-sm">Update</a>
+             
+            </td>
+        </tr>
+
+    }
+</table>
+
+
+@code {
+    List<ModelStudent> listStudents { get; set; } = new List<ModelStudent>();
+
+    protected override void OnInitialized()
+    {
+     LoadData();  
+        base.OnInitialized();
+    }
+
+    private void DeleteData(int id)
+    {
+     DalStudent.DeleteStudentInformation(id);
+    LoadData();
+    }
+
+    private void LoadData(){
+         listStudents = DalStudent.GetStudentsInformation();
+    }
+}

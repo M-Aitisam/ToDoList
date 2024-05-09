@@ -1,0 +1,52 @@
+﻿@page "/counter"
+@page "/counter/{id}"
+@rendermode InteractiveServer
+@inject NavigationManager nm
+
+
+<PageTitle>Home</PageTitle>
+<EditForm Model="modelStudent" OnSubmit="SaveStudent">
+    <input type="text" placeholder="Enter First Name" @bind-value="modelStudent.FirstName" />
+    <input type="text" placeholder="Enter Email Address" @bind-value="modelStudent.EmailAddress"/>
+    <button type="submit">@button</button>
+
+</EditForm>
+
+@code{
+    [Parameter] public string id{get; set;} 
+    ModelStudent modelStudent { get; set; } = new ModelStudent();
+
+    public string button = "Save";
+    private void SaveStudent()
+    {
+
+
+        if (id == null)
+        {
+
+            DalStudent.SaveStudentInformation(modelStudent);
+            nm.NavigateTo("showdata");
+        }
+        else
+        {
+
+            DalStudent.UpdateStudentInformation(modelStudent);
+            nm.NavigateTo("showdata");
+
+        }
+
+    }
+    protected override void OnParametersSet(){
+        if (id == null)
+        {
+            button = "Save";
+        }
+        else
+        {
+            button = "Update";
+            modelStudent= DalStudent.GetStudentInfoById(int.Parse(id));            
+            
+        }
+    }
+    
+}
